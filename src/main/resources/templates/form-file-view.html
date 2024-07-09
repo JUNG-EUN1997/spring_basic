@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<form action="/hello/form-file-post" enctype="multipart/form-data" method="post">
+    <h4>이름</h4>
+    <input type="text" id="name" name="name" />
+    <!--        name이 @Requestparam에 연결된다.-->
+    <h4>이메일</h4>
+    <input type="text" id="email" name="email" />
+    <h4>패스워드</h4>
+    <input type="password" id="password" name="password" />
+    <h4>사진</h4>
+    <input type="file" id="photo" name="photo" />
+    <br><br>
+    <input type="submit" value="완료" />
+</form>
+</body>
+</html>

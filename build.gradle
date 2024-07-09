@@ -40,12 +40,16 @@ dependencies {
 //	DB연결 및 관리를 위한 의존성 : (발전순서) jdbc > ibatis(mybatis) > jpa > springdatajpa
 //    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 //    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//	타임리프(템플릿 엔티 - JSP, 타임리프 등) 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+//	implementation 키워드는, 컴파일시점과 런타임시점에 모두 필요한 라이브러리임을 명시
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+//	compileOnly 키워드는, 컴파일 시점에서 필요한 라이브러리임을 명시
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 }
 
 tasks.named('test') {
