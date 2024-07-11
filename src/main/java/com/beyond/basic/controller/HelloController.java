@@ -2,12 +2,15 @@ package com.beyond.basic.controller;
 
 import com.beyond.basic.domain.FormValue;
 import com.beyond.basic.domain.Hello;
+import com.beyond.basic.domain.Student;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Controller
 // 해당 클래스가 얜 컨트롤러야! 라고 어노테이션 명시해주고, 기능이 주입되는 것
@@ -29,6 +32,7 @@ public class HelloController {
     @GetMapping("/")
 /*
     GetMapping을 통해 get요청을 처리하고 url패턴을 명시
+             추후 CSR 방식인 Vue로 개발 시, GetMapping 사용 X
 
     @ResponseBody
     ResponseBody 사용 시, 화면이 아닌 데이터를 return
@@ -205,16 +209,95 @@ public class HelloController {
 
 
 //    ⭐ case 5 ⭐ : js를 활용한 [json] 데이터 전송
+/*
+url 패턴 : axios-json-view, 화면명 : axios-json-view'
+get요청은 동일, post는 axiosJsonPost
+이름, 이메일, password를 서버에게 던지는 것 까지만!
+* */
+    @GetMapping("/axios-json-view")
+    public String axiosJsonView(){
+        return "axios-json-view";
+    }
 
+    @PostMapping("/axios-json-view")
+    @ResponseBody
+//    json으로 파싱해서 객체를 만들 것 이다. 전송한 데이터를 받을 때에는 @RequestBody라는 어노테이션 사용
+//          > 파라미터가 아닌, 객체로 받았다 라는 의미
+//              <-> (반대의미) @ModelAttribute : 파라미터 형식으로 파싱해서 객체를 만든다.
+    public String axiosJsonPost(@RequestBody Hello hello){
+        System.out.println(hello);
+        return "ok";
+    }
 
 
 //    ⭐ case 6 ⭐ : js를 활용한 [json] 데이터 전송 (+ file)
+    @GetMapping("/axios-json-file-view")
+    public String axiosJsonFileView(){
+        return "axios-json-file-view";
+    }
+
+    @PostMapping("/axios-json-file-view")
+    @ResponseBody
+//    @RequestPart는, 파일과 Json을 처리할 때 주로 사용하는 어노테이션
+    public String axiosJsonFilePost(
+//                                  🍀 RequestParam을 사용하여 레거시한 버전으로 파일을 처리
+//                                    @RequestParam("hello") String hello,
+//                                    @RequestParam("file") MultipartFile file )
+
+//        String으로 받은 뒤 수동으로 객체로 변환
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        Hello h1 = objectMapper.readValue(hello, Hello.class);
+//        System.out.println(h1.getName());
+
+//                                  🍀 formData를 통해, json 과 file(멀티미디어)을 처리할 때 RequestPart 어노테이션을 많이 사용
+//                                      영상, 이미지 등을 파트로 나눠서 처리하기 때문
+                                    @RequestPart("hello") Hello hello,
+                                    @RequestPart("file") MultipartFile file )
+                                    throws JsonProcessingException {
+
+        System.out.println(hello);
+        System.out.println(file.getOriginalFilename());
+        return "ok";
+    }
+
 
 
 
 //    ⭐ case 7 ⭐ : js를 활용한 [json] 데이터 전송 (+ 여러 멀티 file)
+    @GetMapping("/axios-json-multi-file-view")
+    public String axiosJsonMultiFileView(){
+        return "axios-json-multi-file-view";
+    }
+
+    @PostMapping("/axios-json-multi-file-view")
+    @ResponseBody
+    public String axiosJsonMultiFilePost( @RequestPart("hello") Hello hello,
+                                          @RequestPart("files") List<MultipartFile> files ){
+
+        for (MultipartFile file : files){
+            System.out.println(file.getOriginalFilename());
+        }
+        return "ok";
+    }
 
 
+
+
+
+//    🍀 주문서비스 Controller ==================================================
+//    ⭐ case 8 ⭐ : 중첩된 JSON 데이터 처리
+//    name, email, score :{math:80,music:70}
+    @GetMapping("/axios-nested-json-view")
+    public String axiosNestedJsonView(){
+        return "axios-nested-json-view";
+    }
+
+    @PostMapping("/axios-nested-json-view")
+    @ResponseBody
+    public String axiosNestedJsonPost(@RequestBody Student student){ // 멍청짓햇다.. @RequestBody인데..
+        System.out.println(student);
+        return "ok";
+    }
 
 
 

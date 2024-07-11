@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form id="form">
+        <h4>기본정보</h4>
+        <h5>이름</h5>
+        <input type="text" name="name" id="name">
+        <h5>이메일</h5>
+        <input type="text" name="email" id="email">
+        <hr />
+        <div id="grades">
+            <h4>성적정보</h4>
+            <div class="grade">
+                <h5>과목명</h5>
+                <input type="text" name="className" class="className">
+                <h5>성적</h5>
+                <input type="text" name="point" class="point">
+            </div>
+        </div>
+        <button type="button" onclick="addGrade()">성적 추가</button>
+        <br><br>
+        <input type="submit" value="완료" />
+    </form>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        function addGrade(){
+            const gradeDiv = document.getElementById('grades')
+            gradeDiv.innerHTML += `
+                <div class="grade">
+                    <h5>과목명</h5>
+                    <input type="text" name="className" class="className">
+                    <h5>성적</h5>
+                    <input type="text" name="point" class="point">
+                </div>`;
+        }
+
+        const el = document.getElementById("form");
+        el.addEventListener('submit', () => formFunc(event));
+        async function formFunc(event){
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            let grades = [];
+
+            const gradeDivs = document.getElementsByClassName('grade');
+
+            for(let i=0; i<gradeDivs.length; i++){
+                const className = gradeDivs[i].getElementsByClassName('className')[0].value;
+                const point = parseInt(gradeDivs[i].getElementsByClassName('point')[0].value);
+                const gradeObj = {className,point}
+                grades.push(gradeObj);
+            }
+
+            const student = {name, email, grades}
+            console.log(student)
+            try {
+                const response = await axios.post("http://localhost:8080/hello/axios-nested-json-view", student)
+                console.log(response)
+            } catch (e) {
+                console.log(e.message)
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+<form id="form">
+    <h4>이름!!!!!!!!!!!</h4>
+    <input type="text" id="name" name="name" />
+    <!--        name이 @Requestparam에 연결된다.-->
+    <h4>이메일</h4>
+    <input type="text" id="email" name="email" />
+    <h4>패스워드</h4>
+    <input type="password" id="password" name="password" />
+    <h4>파일</h4>
+    <input type="file" id="file" name="file" multiple />
+    <br><br>
+    <input type="submit" value="완료" />
+</form>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    const el = document.getElementById("form");
+    el.addEventListener('submit', () => formFunc(event));
+    async function formFunc(event){
+        event.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const hello = {name, email, password}
+        const helloJson = JSON.stringify(hello);
+        console.log(hello);
+        const fileInput = document.getElementById('file');
+        const files = fileInput.files // file은 배열형태로 얻어진다
+        const formData = new FormData();
+        console.log(files)
+        for(let i =0; i < files.length; i++){
+            formData.append('files', file[i]);
+        }
+<!--        formData.append('hello', helloJson);-->
+<!--        Blob함수는 데이터형을 지정/변환할 때 사용 -->
+        formData.append('hello', new Blob([helloJson], {type:"application/json"}));
+        try {
+            const response = await axios.post("/hello/axios-json-multi-file-view", formData,
+                             {headers : {'Content-Type': 'multipart/form-data'}}); // 파일전송을 위한 추가 코드
+            console.log(response)
+        } catch (e) {
+            console.log(e.message)
+        }
+    }
+</script>
+</body>
+</html>
