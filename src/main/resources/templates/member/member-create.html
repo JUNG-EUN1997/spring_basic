@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -9,7 +9,8 @@
 </head>
 
 <body>
-<form id="form">
+<div th:replace="member/header :: headerFragment"></div>
+<form action="/member/create" enctype="application/x-www-form-urlencoded" method="post">
     <div>
         <label>이름</label>
         <input type="text" id="name" name="name" />
