@@ -1,25 +1,57 @@
 package com.beyond.basic.repository;
 
 import com.beyond.basic.domain.member.Member;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
+@Repository
 public class MemberJpaRepositoy implements MemberRepository{
+    /* EntityManager
+    * JPA의 핵심 클래스(객체)
+    * Entity의 생명주기를 관리, 데이터베이스와의 모든 인터페이싱을 책임
+    * 즉, 엔티티를 대상으로 CRUD하는 기능을 제공
+    * */
+
+    @Autowired // 싱글톤 객체
+    private EntityManager entityManager;
+
     @Override
-    public Member save(Member member) {
-//        원래는 저장이 잘 되었는지 DB 재조회 후 해당 member 리턴해야 함.
-//        return member;
-        return null;
+    public Optional<Member> save(Member member) {
+//        persist : 전달된 엔티티(Member)가 EntityManager의 관리상태가 되도록 만듦
+//                  트랜잭션이 커밋될 때 데이터베이스에 저장. insert
+        entityManager.persist(member);
+        return Optional.ofNullable(member);
     }
 
     @Override
     public List<Member> findAll() {
-        return List.of();
+//        jpql : jpa의 raw쿼리 문법(객체지향)
+//        jpa에서는 jpql 문법 컴파일 에러가 나오지 않으나, springdatajpa에서는 컴파일 에러 발생
+        List<Member> memberList = entityManager
+                .createQuery("select m from Member m", Member.class).getResultList();
+        return memberList;
+    }
+
+    public Member findByEmail(String email){
+        Member member = entityManager
+                .createQuery("select m from Member m where m.email where m.email= :email"
+                        ,Member.class).setParameter("email",email).getSingleResult();
+//        parameter 세팅하는 법 : jpql (객체지향쿼리문법)
+        return member;
     }
 
     @Override
-    public Member findById(Long id) {
-        return null;
+    public Optional<Member> findById(Long id) {
+//         entitymanager를 통해 find(리턴타입클래스 지정 및 매개변수로 pk 필요)
+        Member member = entityManager.find(Member.class, id);
+        return Optional.ofNullable(member);
     }
+
+//    pk이외의 컬럼으로 조회할 때
+//    jpql문법으로 raw쿼리
 }
 

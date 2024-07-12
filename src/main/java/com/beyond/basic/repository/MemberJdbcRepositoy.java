@@ -7,16 +7,22 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository //싱글톤 사용
 public class MemberJdbcRepositoy implements MemberRepository{
+//    Datasource DB와 JDBC에서 사용하는 DB연결 드라이버 객체
+//    application.yml에서 설정한 DB정보가 자동으로 주입
+
     @Autowired
     private DataSource dataSource;
 
     @Override
-    public Member save(Member member) { // 회원가입 시, 리턴타입이 어찌될지 모르기 때문에
+    public Optional<Member> save(Member member) { // 회원가입 시, 리턴타입이 어찌될지 모르기 때문에
         try{
 //            Connection connection = dataSource.getConnection();
 //            String sql = "insert into member(name, email, password) values(?, ?, ?);";
@@ -53,13 +59,67 @@ public class MemberJdbcRepositoy implements MemberRepository{
         return null;
     }
 
+    // Jdbc 사용하면서 불편함이 무엇인지 느끼는 것이 목표
     @Override
     public List<Member> findAll() {
-        return List.of();
+        List<Member> memberList = new ArrayList<>();
+        try {
+            Connection connection = dataSource.getConnection();
+            String sql = "SELECT * FROM member";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery(); // ResultSet에서는 구조화된 데이터가 들어간다.
+
+
+//            단건 조회 시,resultSet.next() 만 진행하면 된다.
+            while (resultSet.next()){ //curser
+                Long id = resultSet.getLong("id"); // 구조화가 되어있어 id라는 컬럼명으로 꺼낼 수 있다.
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+//                String password = resultSet.getString("password");
+
+                Member member = new Member();
+                member.setId(id);
+                member.setName(name);
+                member.setEmail(email);
+//                member.setPassword(password);
+
+                memberList.add(member);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return memberList;
     }
 
     @Override
-    public Member findById(Long id) {
+    public Optional<Member> findById(Long id) {
+        Member member = new Member();
+
+        try {
+            Connection connection = dataSource.getConnection();
+            String sql = "SELECT * FROM member WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setLong(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next(); // 단건조회라 next만
+
+            String name = resultSet.getString("name");
+            String email = resultSet.getString("email");
+            String password = resultSet.getString("password");
+
+            member = new Member();
+            member.setId(id);
+            member.setName(name);
+            member.setEmail(email);
+            member.setPassword(password);
+
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+
         return null;
     }
 }

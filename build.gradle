@@ -39,9 +39,12 @@ maven이라는 레파지토리라는 레파지토리를 쓰고있다.
 dependencies {
 //	DB연결 및 관리를 위한 의존성 : (발전순서) jdbc > ibatis(mybatis) > jpa > springdatajpa
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+//	mybatis관련 의존성 추가
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0' // :2.2.0 인 버전명시 필수
+
 //	mariadb db연결을 위한 mariadb클라이언트 추가
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 //	타임리프(템플릿 엔티 - JSP, 타임리프 등) 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 //	implementation 키워드는, 컴파일시점과 런타임시점에 모두 필요한 라이브러리임을 명시

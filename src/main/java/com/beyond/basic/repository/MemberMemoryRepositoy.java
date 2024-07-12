@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // 한 객체를 클래스 단위로 확장하여 <<<<🍀여러 클래스에서 호출🍀>>>>하여 쓸 수 있는
 // (((((싱글톤)))) 활용하기
@@ -21,7 +22,7 @@ public class MemberMemoryRepositoy implements MemberRepository{
 
 
     @Override
-    public Member save(Member member) {
+    public Optional<Member> save(Member member) {
         memberList.add(member);
 //        원래는 저장이 잘 되었는지 DB 재조회 후 해당 member 리턴해야 함.
 //        return member;
@@ -34,7 +35,7 @@ public class MemberMemoryRepositoy implements MemberRepository{
     }
 
     @Override
-    public Member findById(Long id) {
+    public Optional<Member> findById(Long id) {
         return null;
     }
 }
