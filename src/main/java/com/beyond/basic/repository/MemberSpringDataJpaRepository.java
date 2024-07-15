@@ -1,4 +1,4 @@
-package com.beyond.basic.repository;
+//package com.beyond.basic.repository;
 
 import com.beyond.basic.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
+//@Repository
 /*
 * MemberRepository가 되기 위해서는 JpaRepository를 상속해야하고
 *       상속 시, Entity명과 entity의 PK타입을 명시해야한다.
@@ -18,6 +18,6 @@ import java.util.Optional;
 *           리플랙션 : 런타임시점에 기능들이 구현이 되었다!
 *           프록시 : 가짜 객체
 * */
-public interface MemberSpringDataJpaRepository extends MemberRepository, JpaRepository<Member,Long> {
-    Optional<Member> findByEmail(String email); //런타임 시점에 이거 만들어줘! 라고 말한 것
-}
+//public interface MemberSpringDataJpaRepository extends MemberRepository, JpaRepository<Member,Long> {
+////    Optional<Member> findByEmail(String email); //런타임 시점에 이거 만들어줘! 라고 말한 것
+//}

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +26,13 @@ import java.util.Optional;
 // 트랜잭션은 따라다니면서 상태처리를 해야하기 때문에 클래스에 붙여 전체의 메소드에 적용하는 것은 권장하지 않는다.
 @Transactional
 public class MemberService {
-    private final MemberRepository memberRepository; // membercontroller에서 받은 객체생성
+    private final MyMemberRepository memberRepository; // membercontroller에서 받은 객체생성
 //    객체변수로 생성
 //    최초 한번 객체 생성 후 만들어지지 못하도록 final 추가
 
 //     MemberService 생성자가 호출될 때 객체가 생성되도록 변경
     @Autowired // ⭐ 싱글톤 객체 주입(DI / 디펜더시 인젝션) : 받는다는 것을 의미
-    public MemberService(MemberSpringDataJpaRepository memoryRepositoy){ // 어떤 싱글톤 객체를 주입받는지 작성
+    public MemberService(MyMemberRepository memoryRepositoy){ // 어떤 싱글톤 객체를 주입받는지 작성
         this.memberRepository = memoryRepositoy; // new MemberMemoryRepositoy() 를 싱글톤 객체로 만든 것
     }
 
@@ -45,10 +46,17 @@ public class MemberService {
             throw new IllegalArgumentException("비밀번호가 너무 짧습니다.");
         }
 
+        /* 방법 1. getter setter 활용\
         Member member = new Member();
         member.setName(dto.getName());
         member.setEmail(dto.getEmail());
         member.setPassword(dto.getPassword());
+        * */
+//        방법 2. dto 객체를 활용하여 member 객체 생성하기
+        Member member = dto.toEntity();
+
+
+
 //        Service.java에서 ReqDto객체를 실제 DB 저장용 객체로 조립해야한다. >> 보통 Service 레이어에서 하는 것이 일반적이다.
 //              그렇기때문에 Service의 매개변수는 ReqDto여야한다.
         System.out.println(member);
@@ -57,29 +65,27 @@ public class MemberService {
 
     public MemberDetailResDto memberDetail(Long id){
         Optional<Member> optmember = memberRepository.findById(id);
-        MemberDetailResDto memberDetailResDto = new MemberDetailResDto();
         Member member = optmember.orElseThrow(() -> new EntityNotFoundException("없는 회원입니다."));
 //        🍀 Optional을 사용한 목적
 //              트랜잭션 롤백을 위한 예외 강제 발생!
 //              클라이언트에게 적절한 예외 메세지와 상태코드 발생!
 //              단, 트랜잭션을 하기위해 상단에 @Transactional 어노테이션이 붙어있어야 한다.
 
-        memberDetailResDto.setId(member.getId());
-        memberDetailResDto.setName(member.getName());
-        memberDetailResDto.setEmail(member.getEmail());
-        memberDetailResDto.setPassword(member.getPassword());
+        MemberDetailResDto memberDetailResDto = member.detFromEntity();
+        // 이 괄호 안에 매개변수로 member로 넣어주거나 아니거나 똑같은 것
         return memberDetailResDto;
     }
 
     public List<MemberResDto> memberList(){ // list를 resdto로 변경
         List<MemberResDto> memberResDtos = new ArrayList<>();
         List<Member> memberList = memberRepository.findAll();
-        System.out.println(memberList);
         for (Member member : memberList) {
-            MemberResDto dto = new MemberResDto();
-            dto.setId(member.getId());
-            dto.setName(member.getName());
-            dto.setEmail(member.getEmail());
+//            MemberResDto dto = new MemberResDto();
+//            dto.setId(member.getId());
+//            dto.setName(member.getName());
+//            dto.setEmail(member.getEmail());
+//            dto.setCreatedTime(member.getCreatedTime());
+            MemberResDto dto = member.listFromEntity();
             memberResDtos.add(dto);
         }
 

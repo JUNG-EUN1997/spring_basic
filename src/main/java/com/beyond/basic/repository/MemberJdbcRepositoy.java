@@ -75,12 +75,13 @@ public class MemberJdbcRepositoy implements MemberRepository{
                 Long id = resultSet.getLong("id"); // 구조화가 되어있어 id라는 컬럼명으로 꺼낼 수 있다.
                 String name = resultSet.getString("name");
                 String email = resultSet.getString("email");
-//                String password = resultSet.getString("password");
+                String password = resultSet.getString("password");
 
-                Member member = new Member();
-                member.setId(id);
-                member.setName(name);
-                member.setEmail(email);
+                Member member = new Member(name,email,password);
+
+//                member.setId(id);
+//                member.setName(name);
+//                member.setEmail(email);
 //                member.setPassword(password);
 
                 memberList.add(member);
@@ -108,11 +109,11 @@ public class MemberJdbcRepositoy implements MemberRepository{
             String email = resultSet.getString("email");
             String password = resultSet.getString("password");
 
-            member = new Member();
-            member.setId(id);
-            member.setName(name);
-            member.setEmail(email);
-            member.setPassword(password);
+            member = new Member(name,email,password);
+//            member.setId(id);
+//            member.setName(name);
+//            member.setEmail(email);
+//            member.setPassword(password);
 
 
         }catch (SQLException e){

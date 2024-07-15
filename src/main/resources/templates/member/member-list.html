@@ -17,6 +17,8 @@
                 <th>id</th>
                 <th>이름</th>
                 <th>이메일</th>
+                <th>가입일시</th>
+                <th>관리</th>
 <!--                <th>패스워드</th>-->
             </tr>
         </thead>
@@ -25,6 +27,7 @@
                 <td th:text="${member.id}"></td>
                 <td th:text="${member.name}"></td>
                 <td th:text="${member.email}"></td>
+                <td th:text="${member.createdTime}"></td>
                 <td>
                     <a th:href="@{/member/{id}(id=${member.id})}">상세조회</a>
                 </td>

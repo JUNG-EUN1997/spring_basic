@@ -19,6 +19,7 @@
             <th>이름</th>
             <th>이메일</th>
             <th>패스워드</th>
+            <th>가입일시</th>
         </tr>
         </thead>
         <tbody>
@@ -27,6 +28,7 @@
             <td th:text="${member.name}"></td>
             <td th:text="${member.email}"></td>
             <td th:text="${member.password}"></td>
+            <td th:text="${member.createdTime}"></td>
         </tr>
         </tbody>
     </table>
