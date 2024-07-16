@@ -67,6 +67,12 @@ public class Member {
         this.password = password;
     }
 
+//    password 상단에 @Setter를 통해 특정 변수만 setter 사용이 가능하나,
+//    일반적으로 의도를 명확하게한 메서드를 별도로 만들어 사용하는 것을 권장.
+    public void updatePw(String password){
+        this.password = password;
+    }
+
     public MemberDetailResDto detFromEntity(){ // db -> client
         String dateFormat = this.getCreatedTime().format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초"));
         return new MemberDetailResDto(this.id,this.name,this.email,this.password,dateFormat);

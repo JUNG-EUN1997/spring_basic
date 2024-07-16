@@ -1,10 +1,8 @@
 package com.beyond.basic.service;
 
 import com.beyond.basic.controller.MemberController;
-import com.beyond.basic.domain.member.Member;
-import com.beyond.basic.domain.member.MemberDetailResDto;
-import com.beyond.basic.domain.member.MemberReqDto;
-import com.beyond.basic.domain.member.MemberResDto;
+import com.beyond.basic.domain.member.*;
+import com.beyond.basic.domain.post.Post;
 import com.beyond.basic.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,6 +69,12 @@ public class MemberService {
 //              클라이언트에게 적절한 예외 메세지와 상태코드 발생!
 //              단, 트랜잭션을 하기위해 상단에 @Transactional 어노테이션이 붙어있어야 한다.
 
+        System.out.println("글쓴이의 글 쓴 개수"+member.getPosts().size());
+        for (Post p : member.getPosts()){
+            System.out.println("글의 제목 : "+ p.getTitle());
+        }
+
+
         MemberDetailResDto memberDetailResDto = member.detFromEntity();
         // 이 괄호 안에 매개변수로 member로 넣어주거나 아니거나 똑같은 것
         return memberDetailResDto;
@@ -91,4 +95,24 @@ public class MemberService {
 
         return memberResDtos;
     }
+
+    public void pwUpdate(MemberUpdateDto dto){
+        Member member = memberRepository.findById(dto.getId()).orElseThrow(() -> new EntityNotFoundException("없습니다!"));
+        if(member!=null){
+            member.updatePw(dto.getPassword());
+//            기존객체를 조회 후 수정한 다음에 save시에는 jpa update 실행
+//            추가와 수정이 둘 다 save
+            memberRepository.save(member);
+        }
+    }
+
+    public void memberDelete(Long id){
+        Member member = memberRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("없습니다."));
+        memberRepository.delete(member); //완전삭제
+
+//        member.updateDelYn("Y")
+//        memberRepository.save(member);
+    }
+
+
 }

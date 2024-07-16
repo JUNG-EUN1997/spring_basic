@@ -36,6 +36,7 @@ public class PostService {
             List<PostResDto> postResDtoList = new ArrayList<>();
             for (Post p : postList){
                 postResDtoList.add(p.fromEntity());
+                System.out.println("저자의 이름은 "+ p.getMember().getName());
             }
             return postResDtoList;
         } catch (NullPointerException e) {
