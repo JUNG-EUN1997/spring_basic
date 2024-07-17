@@ -13,5 +13,5 @@ public class MemberResDto {
     private Long id;
     private String name;
     private String email;
-    private LocalDateTime createdTime;
+//    private LocalDateTime createdTime;
 }

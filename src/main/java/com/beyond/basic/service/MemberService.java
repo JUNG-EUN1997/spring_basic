@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class MemberService {
 //        Service.java에서 ReqDto객체를 실제 DB 저장용 객체로 조립해야한다. >> 보통 Service 레이어에서 하는 것이 일반적이다.
 //              그렇기때문에 Service의 매개변수는 ReqDto여야한다.
         System.out.println(member);
-        memberRepository.save(member); // DB에다 저장을 하겠따!
+
 
 
 //            Transactional 롤백처리 테스트
@@ -65,22 +66,26 @@ public class MemberService {
         if(member.getName().equals("kim")){
             throw new IllegalArgumentException("잘못된 입력입니다.");
         }
+
+        if (memberRepository.findByEmail(dto.getEmail()).isPresent())
+            throw new IllegalArgumentException("이미 존재하는 email 입니다");
+        memberRepository.save(member); // DB에다 저장을 하겠따!
     }
 
     public MemberDetailResDto memberDetail(Long id){
         Optional<Member> optmember = memberRepository.findById(id);
 //        Member member = optmember.orElseThrow(() -> new EntityNotFoundException("없는 회원입니다."));
-        Member member = optmember.orElseThrow(() -> null);
+        Member member = optmember.orElseThrow(() -> new EntityNotFoundException("없는 회원입니다."));
 
 //        🍀 Optional을 사용한 목적
 //              트랜잭션 롤백을 위한 예외 강제 발생!
 //              클라이언트에게 적절한 예외 메세지와 상태코드 발생!
 //              단, 트랜잭션을 하기위해 상단에 @Transactional 어노테이션이 붙어있어야 한다.
 
-        System.out.println("글쓴이의 글 쓴 개수"+member.getPosts().size());
-        for (Post p : member.getPosts()){
-            System.out.println("글의 제목 : "+ p.getTitle());
-        }
+//        System.out.println("글쓴이의 글 쓴 개수"+member.getPosts().size());
+//        for (Post p : member.getPosts()){
+//            System.out.println("글의 제목 : "+ p.getTitle());
+//        }
 
 
         MemberDetailResDto memberDetailResDto = member.detFromEntity();

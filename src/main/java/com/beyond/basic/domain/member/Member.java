@@ -1,5 +1,6 @@
 package com.beyond.basic.domain.member;
 
+import com.beyond.basic.domain.BaseEntity;
 import com.beyond.basic.domain.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +26,7 @@ import java.util.Optional;
 // 실행 시, 연결해놓은 DB에 해당 테이블이 존재하지 않으면 엔티티매니저가 DB에 테이블을 생성해준다
 
 @NoArgsConstructor //필수⭐ -> JPA에서는 기본생성자가 런타임 시, 필수
-public class Member {
+public class Member extends BaseEntity {
     @Id //pk 설정
 //    identity : auto_increment 설정
 //    auto : jpa 자동으로 적절한 전략을 선택하도록 맡기는 것
@@ -49,18 +50,6 @@ public class Member {
     @OneToMany(mappedBy = "member") // "domain/post/Post"에 member 변수명 작성
 //    @OneToMany는 optional한 값
     private List<Post> posts;
-
-
-
-//        camelCase를 사용하면, DB에는 _(언더바)로 들어간다
-//    ex) JAVA에는 createdTime 일 때 DB에는 created_time 로 들어간다.
-    @CreationTimestamp //DB에는 current_timestamp가 생성되지 않음.
-    private LocalDateTime createdTime;
-
-    @UpdateTimestamp
-    private LocalDateTime updateTime;
-
-
     public Member(String name, String email, String password){
         this.name = name;
         this.email = email;
@@ -79,6 +68,6 @@ public class Member {
     }
 
     public MemberResDto listFromEntity(){ // db -> client
-        return new MemberResDto(this.id, this.name, this.email,this.createdTime);
+        return new MemberResDto(this.id, this.name, this.email);
     }
 }

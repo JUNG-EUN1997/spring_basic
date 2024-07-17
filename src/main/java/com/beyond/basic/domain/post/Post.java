@@ -1,16 +1,17 @@
 package com.beyond.basic.domain.post;
 
+import com.beyond.basic.domain.BaseEntity;
 import com.beyond.basic.domain.member.Member;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter // Data는 권장하지 않음
 @Entity
 @NoArgsConstructor
-public class Post {
+public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
