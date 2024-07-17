@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -26,6 +27,16 @@ import java.util.List;
 @RequestMapping("/hello") // 클래스차원에 url매핑시에 RequestMapping 사용 > 앞에 무조건 /hello는 붙이고 들어가는 것
 // method 차원에서도 RequestMapping 사용 가능
 public class HelloController {
+
+//    아래와 같이 Controller에서도 HttpServletRequest를 주입 받아 사용 가능
+    public String helloWorld(HttpServletRequest request){
+//        System.out.println(request.getSession());
+//        System.out.println(request.getHeader("Cookie"));
+        return "helloworld";
+    }
+
+
+
 
 //    ⭐ case 1 ⭐ 사용자가 서버에게 화면요청 : get
 //    ⭐ case 2 ⭐ 사용자가 서버에게 데이터 요청 : get

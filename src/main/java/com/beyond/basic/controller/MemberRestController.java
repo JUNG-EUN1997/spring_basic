@@ -1,11 +1,11 @@
 package com.beyond.basic.controller;
 
-import com.beyond.basic.domain.member.MemberDetailResDto;
-import com.beyond.basic.domain.member.MemberReqDto;
-import com.beyond.basic.domain.member.MemberResDto;
-import com.beyond.basic.domain.member.MemberUpdateDto;
+import com.beyond.basic.domain.CommonResDto;
+import com.beyond.basic.domain.member.*;
 import com.beyond.basic.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +21,17 @@ public class MemberRestController {
     private final MemberService memberService;
 
     @GetMapping("/member/list")
-    public List<MemberResDto> memberList(){
-        return memberService.memberList();
+    public ResponseEntity<CommonResDto> memberList(){
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "member List is successfully return", memberService.memberList());
+        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
     @GetMapping("/member/{id}")
-    public MemberDetailResDto memberDetail(@PathVariable(value = "id") Long id){
-        return memberService.memberDetail(id);
+    public ResponseEntity<CommonResDto> memberDetail(@PathVariable(value = "id") Long id){
+
+//        return memberService.memberDetail(id);
+        CommonResDto commonResDto = new CommonResDto(HttpStatus.OK, "member Detail is successfully return", memberService.memberDetail(id));
+        return new ResponseEntity<>(commonResDto, HttpStatus.OK);
     }
 
     @PostMapping("/member/create")

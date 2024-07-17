@@ -2,6 +2,7 @@ package com.beyond.basic.repository;
 
 import com.beyond.basic.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,4 +25,9 @@ import java.util.Optional;
 public interface MyMemberRepository extends JpaRepository<Member,Long> {
     Optional<Member> findByEmail(String email); //런타임 시점에 이거 만들어줘! 라고 말한 것
     List<Member> findByName(String name); //추가하려고 하는 새로운 메소드
+
+//    jpql문법을 통한 raw쿼리 작성 시, 컴파일타임에서 오류체크
+//    @Query("elect m from Member m") > sql문이 오류가 나서 컴파일 단계에서 오류가 발생 및 오류단계에서 어떤 메소드가 오류가 났는지 알려줌
+    @Query("select m from Member m") // sql문이 오류가 나지 않아서 제대로 작동함
+    List<Member> myFindAll();
 }

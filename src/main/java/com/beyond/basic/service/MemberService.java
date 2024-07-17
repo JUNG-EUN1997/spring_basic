@@ -6,9 +6,9 @@ import com.beyond.basic.domain.post.Post;
 import com.beyond.basic.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.Optional;
 //         각 메서드 마다 하나의 트랜잭션으로 묶는다는 뜻. 하나의 메서드라도 실패하면 롤백
 // 만약 예외 발생 시, 롤백처리 자동화
 // 트랜잭션은 따라다니면서 상태처리를 해야하기 때문에 클래스에 붙여 전체의 메소드에 적용하는 것은 권장하지 않는다.
-@Transactional
+@Transactional(readOnly = true)
 public class MemberService {
     private final MyMemberRepository memberRepository; // membercontroller에서 받은 객체생성
 //    객체변수로 생성
@@ -54,16 +54,24 @@ public class MemberService {
         Member member = dto.toEntity();
 
 
-
 //        Service.java에서 ReqDto객체를 실제 DB 저장용 객체로 조립해야한다. >> 보통 Service 레이어에서 하는 것이 일반적이다.
 //              그렇기때문에 Service의 매개변수는 ReqDto여야한다.
         System.out.println(member);
         memberRepository.save(member); // DB에다 저장을 하겠따!
+
+
+//            Transactional 롤백처리 테스트
+//        보통은 save 작업이 2개 이상인 경우 의미가 있다.
+        if(member.getName().equals("kim")){
+            throw new IllegalArgumentException("잘못된 입력입니다.");
+        }
     }
 
     public MemberDetailResDto memberDetail(Long id){
         Optional<Member> optmember = memberRepository.findById(id);
-        Member member = optmember.orElseThrow(() -> new EntityNotFoundException("없는 회원입니다."));
+//        Member member = optmember.orElseThrow(() -> new EntityNotFoundException("없는 회원입니다."));
+        Member member = optmember.orElseThrow(() -> null);
+
 //        🍀 Optional을 사용한 목적
 //              트랜잭션 롤백을 위한 예외 강제 발생!
 //              클라이언트에게 적절한 예외 메세지와 상태코드 발생!
