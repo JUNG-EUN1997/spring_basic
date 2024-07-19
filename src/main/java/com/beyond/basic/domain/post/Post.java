@@ -17,7 +17,9 @@ public class Post extends BaseEntity {
     private Long id;
     private String title;
 
-    @ManyToOne //자신이 "앞" , 상대가 "뒤" :  나To상대 의 관계
+//    @ManyToOne //자신이 "앞" , 상대가 "뒤" :  나To상대 의 관계
+//    ManyToOne, OneToOne의 경우 default 설정이 eager이므로, lazy로 변경
+    @ManyToOne(fetch = FetchType.LAZY)
 //    @ManyToOne은 필수적인 값
     @JoinColumn(name = "member_id")
 //    JPA의 영속성(Persistence)컨텍스트에 의해 Membr가 관리

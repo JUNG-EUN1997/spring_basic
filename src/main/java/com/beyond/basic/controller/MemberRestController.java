@@ -3,6 +3,8 @@ package com.beyond.basic.controller;
 import com.beyond.basic.domain.CommonErrorDto;
 import com.beyond.basic.domain.CommonResDto;
 import com.beyond.basic.domain.member.*;
+import com.beyond.basic.repository.MemberRepository;
+import com.beyond.basic.repository.MyMemberRepository;
 import com.beyond.basic.service.MemberService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.List;
 public class MemberRestController {
 
     private final MemberService memberService;
+    private final MyMemberRepository memberRepository;
 
     @GetMapping("/member/text")
     public String memberText(){
@@ -78,7 +81,15 @@ public class MemberRestController {
     }
 
 
-
+//    lazy(지연로딩), eager(즉시로딩) 테스트
+    @GetMapping("/member/post/all")
+    @ResponseBody
+    public void memberPostAll(){
+        List<Member> memberList = memberRepository.findAll();
+        for (Member m : memberList){
+            System.out.println(m.getPosts().size());
+        }
+    }
 
 
 
