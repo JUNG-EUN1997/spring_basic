@@ -313,6 +313,22 @@ get요청은 동일, post는 axiosJsonPost
 
 
 
+//    빌더패턴 실습
+    public void hellowBuilderTest(){
+        Hello hello = Hello.builder().name("야호").bulid(); //builder() 는 우리가 만든 것
+        /*
+        * 1. builder() 호출
+        * 2. HelloBulder builder() 호출 : Hello.java
+        * 3. static class HelloBulder static class로 return : Hello.java
+        * 4. 즉, 내부에 있는 각각의 변수,속성 명을 자동완성으로 만들 수 있다!!
+        *
+        * builder는 AllArgsConstructor를 함께 가져가야함.
+        * Hello.builder() ::
+        * .bulid() :: 객체 메소드
+        * */
+    }
+
+
 
 
 }

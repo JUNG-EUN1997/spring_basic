@@ -19,4 +19,39 @@ public class Hello {
 //    public String toString(){
 //        return "이름은 : " + this.name + " 메일은 : " + this.email + " 비번은 : " + this.password ;
 //    }
+
+    public Hello(HelloBulder helloBulder){
+        this.name = helloBulder.name;
+        this.email = helloBulder.email;
+        this.password = helloBulder.password;
+    }
+
+    public static HelloBulder builder(){
+        return new HelloBulder();
+    }
+
+    public static class HelloBulder{
+        private String name;
+        private String email;
+        private String password;
+
+        public HelloBulder name(String name){
+            this.name = name;
+            return this;
+        }
+
+        public HelloBulder email(String email){
+            this.email = email;
+            return this;
+        }
+
+        public HelloBulder password(String password){
+            this.password = password;
+            return this;
+        }
+
+        public Hello bulid(){
+            return new Hello(this);
+        }
+    }
 }
